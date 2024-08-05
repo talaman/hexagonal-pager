@@ -1,14 +1,20 @@
 import pytest
 from pager.domain.models.monitored_service import MonitoredService
 
-def test_monitored_service_creation():
-    """
-    Test case for creating a MonitoredService object.
+def test_mark_unhealthy():
+    service = MonitoredService(id='service1')
+    service.mark_unhealthy()
+    assert service.state == 'Unhealthy'
+    assert not service.acknowledged
+    assert service.current_level == 0
 
-    This test verifies that a MonitoredService object can be created with the specified id and state.
-    It checks that the id and state attributes of the created object match the provided values.
-
-    """
-    service = MonitoredService(id='service1', state='Healthy')
-    assert service.id == 'service1'
+def test_mark_healthy():
+    service = MonitoredService(id='service1', state='Unhealthy', acknowledged=False)
+    service.mark_healthy()
     assert service.state == 'Healthy'
+    assert not service.acknowledged
+
+def test_acknowledge_alert():
+    service = MonitoredService(id='service1', state='Unhealthy', acknowledged=False)
+    service.acknowledge_alert()
+    assert service.acknowledged

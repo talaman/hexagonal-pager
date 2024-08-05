@@ -1,45 +1,66 @@
 import pytest
-from unittest.mock import Mock
-from pager.domain.models.escalation_policy import EscalationPolicy, EscalationLevel, NotificationTarget
-from pager.domain.events import Alert
+from pager.domain.models.escalation_policy import EscalationPolicy, EscalationLevel
+from pager.domain.models.monitored_service import MonitoredService
+from pager.domain.events import Alert, Acknowledgement, HealthyEvent
+from pager.domain.models.notification_target import EmailTarget, SmsTarget
 from pager.domain.services.pager_service import PagerService
-from pager.ports.escalation_policy_repository import EscalationPolicyRepository
-from pager.ports.email_sender import EmailSender
-from pager.ports.sms_sender import SmsSender
+from tests.mocks.mock_email_sender import MockEmailSender
+from tests.mocks.mock_sms_sender import MockSmsSender
+from tests.mocks.mock_escalation_policy_repository import MockEscalationPolicyRepository
 
 @pytest.fixture
-def policy_repo():
-    return Mock(EscalationPolicyRepository)
+def setup_pager_service():
+    email_sender = MockEmailSender()
+    sms_sender = MockSmsSender()
+    policy_repo = MockEscalationPolicyRepository({
+        'service1': EscalationPolicy(
+            monitored_service_id='service1',
+            levels=[
+                EscalationLevel(level_number=0, targets=[EmailTarget(email='test@example.com')]),
+                EscalationLevel(level_number=1, targets=[SmsTarget(phone_number='1234567890')])
+            ]
+        )
+    })
+    pager_service = PagerService(policy_repo, email_sender, sms_sender)
+    return pager_service, email_sender, sms_sender
 
-@pytest.fixture
-def email_sender():
-    return Mock(EmailSender)
-
-@pytest.fixture
-def sms_sender():
-    return Mock(SmsSender)
-
-@pytest.fixture
-def pager_service(policy_repo, email_sender, sms_sender):
-    return PagerService(policy_repo, email_sender, sms_sender)
-
-def test_handle_alert(pager_service, policy_repo, email_sender, sms_sender):
-    """
-    Test the handle_alert method of the PagerService class.
-    Args:
-        pager_service (PagerService): An instance of the PagerService class.
-        policy_repo (PolicyRepository): An instance of the PolicyRepository class.
-        email_sender (EmailSender): An instance of the EmailSender class.
-        sms_sender (SmsSender): An instance of the SmsSender class.
-    """
-    targets = [NotificationTarget(type='email', address='test@example.com')]
-    level = EscalationLevel(targets=targets)
-    policy = EscalationPolicy(monitored_service_id='service1', levels=[level])
+def test_handle_alert(setup_pager_service):
+    pager_service, email_sender, sms_sender = setup_pager_service
+    alert = Alert(service_id='service1', message='Test Alert')
     
-    policy_repo.get_policy.return_value = policy
-    
-    alert = Alert(service_id='service1', message='Test alert')
     pager_service.handle_alert(alert)
     
-    email_sender.send.assert_called_once_with('test@example.com')
-    sms_sender.send.assert_not_called()
+    assert len(email_sender.sent_emails) == 1
+    assert email_sender.sent_emails[0] == 'test@example.com'
+
+def test_handle_acknowledgement(setup_pager_service):
+    pager_service, email_sender, sms_sender = setup_pager_service
+    alert = Alert(service_id='service1', message='Test Alert')
+    pager_service.handle_alert(alert)
+
+    ack = Acknowledgement(service_id='service1')
+    pager_service.handle_acknowledgement(ack)
+
+    service = pager_service.monitored_services['service1']
+    assert service.acknowledged
+
+def test_handle_healthy_event(setup_pager_service):
+    pager_service, email_sender, sms_sender = setup_pager_service
+    alert = Alert(service_id='service1', message='Test Alert')
+    pager_service.handle_alert(alert)
+
+    healthy_event = HealthyEvent(service_id='service1')
+    pager_service.handle_healthy_event(healthy_event)
+
+    service = pager_service.monitored_services['service1']
+    assert service.state == 'Healthy'
+
+def test_handle_timeout(setup_pager_service):
+    pager_service, email_sender, sms_sender = setup_pager_service
+    alert = Alert(service_id='service1', message='Test Alert')
+    pager_service.handle_alert(alert)
+
+    pager_service.handle_timeout('service1')
+
+    assert len(sms_sender.sent_sms) == 1
+    assert sms_sender.sent_sms[0] == '1234567890'
