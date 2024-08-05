@@ -1,6 +1,21 @@
 from dataclasses import dataclass
+from abc import ABC, abstractmethod
+
+class NotificationTarget(ABC):
+    @abstractmethod
+    def get_contact_info(self) -> str:
+        pass
 
 @dataclass
-class NotificationTarget:
-    type: str  # 'email' or 'sms'
-    address: str  # email address or phone number
+class EmailTarget(NotificationTarget):
+    email: str
+
+    def get_contact_info(self) -> str:
+        return self.email
+
+@dataclass
+class SmsTarget(NotificationTarget):
+    phone_number: str
+
+    def get_contact_info(self) -> str:
+        return self.phone_number
