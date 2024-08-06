@@ -128,7 +128,7 @@ Then you can push the image to a container registry and deploy it to your prefer
 
 [![ci](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml/badge.svg)](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml)
 
-This project uses GitHub Actions for continuous integration. The CI pipeline is defined in .github/workflows/ci.yml and it runs tests in 2 different environments: Github hosted runners and Docker. 
+This project uses GitHub Actions for continuous integration. The CI pipeline is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and it runs tests in 2 different environments: Github hosted runners and Docker. 
 
 It includes the following steps:
 
