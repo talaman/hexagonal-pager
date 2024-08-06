@@ -6,17 +6,17 @@ This repository implements a Pager system using Domain-Driven Design (DDD) and H
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-  - [Domain Layer](#domain-layer)
-  - [Application Layer](#application-layer)
-  - [Ports Layer](#ports-layer)
-  - [Adapters Layer](#adapters-layer)
-- [Getting Started](#getting-started)
-- [Running Tests](#running-tests)
-- [Continuous Integration](#continuous-integration)
-- [Contributing](#contributing)
-- [License](#license)
+- [Hexagonal Pager System](#hexagonal-pager-system)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Architecture](#architecture)
+    - [Domain Layer](#domain-layer)
+    - [Application Layer](#application-layer)
+    - [Ports Layer](#ports-layer)
+    - [Adapters Layer](#adapters-layer)
+  - [Getting Started](#getting-started)
+  - [Running Tests](#running-tests)
+  - [Continuous Integration](#continuous-integration)
 
 ## Overview
 
@@ -100,4 +100,6 @@ This project uses GitHub Actions for continuous integration. The CI pipeline is 
 - Install dependencies: Installs the required dependencies using pip.
 - Run tests: Runs the tests using pytest.
 - Build and export to Docker: Uses the docker/build-push-action@v6 action to build and export the Docker image.
+
+The CI pipeline is triggered on every push to the main branch and runs the tests to ensure the code quality and functionality.
 
