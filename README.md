@@ -122,7 +122,9 @@ To get started with the Hexagonal Pager System, follow these steps:
 
 [![ci](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml/badge.svg)](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml)
 
-This project uses GitHub Actions for continuous integration. The CI pipeline is defined in .github/workflows/ci.yml and includes the following steps:
+This project uses GitHub Actions for continuous integration. The CI pipeline is defined in .github/workflows/ci.yml and it runs tests in 2 different environments: Github hosted runners and Docker. 
+
+It includes the following steps:
 
 - Checkout code: Uses the actions/checkout@v3 action to checkout the code.
 - Set up Python: Uses the actions/setup-python@v4 action to set up Python 3.12.
@@ -130,7 +132,7 @@ This project uses GitHub Actions for continuous integration. The CI pipeline is 
 - Run tests: Runs the tests using pytest.
 - Build and export to Docker: Uses the docker/build-push-action@v6 action to build and export the Docker image.
 
-The CI pipeline is triggered on every push to the main branch and runs the tests to ensure the code quality and functionality.
+The CI pipeline is triggered on every push or pull request to the main branch, and runs the tests to ensure the code quality and functionality.
 
 ## Further Improvements
 
