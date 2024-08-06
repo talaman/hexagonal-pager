@@ -1,12 +1,12 @@
 [![ci](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml/badge.svg)](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml)
 
-# Hexagonal Pager System
+# Hexagonal Pager 
 
-This repository implements a Pager system using Domain-Driven Design (DDD) and Hexagonal Architecture principles. The system is designed to handle alerts and notifications for monitored services.
+This repository implements a Pager system using Hexagonal Architecture principles. The system is designed to handle alerts and notifications for monitored services.
 
 ## Table of Contents
 
-- [Hexagonal Pager System](#hexagonal-pager-system)
+- [Hexagonal Pager](#hexagonal-pager)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Architecture](#architecture)
@@ -24,7 +24,7 @@ This repository implements a Pager system using Domain-Driven Design (DDD) and H
 
 ## Overview
 
-The Hexagonal Pager System is built to manage and escalate alerts for various monitored services. It uses DDD to model the core business logic and Hexagonal Architecture to ensure the system is modular, testable, and adaptable to different technologies and interfaces.
+The Hexagonal Pager system is built to manage and escalate alerts for various monitored services. It uses DDD to model the core business logic and Hexagonal Architecture to ensure the system is modular, testable, and adaptable to different technologies and interfaces.
 
 ## Architecture
 
@@ -106,7 +106,7 @@ pytest
 
 ### Creating image artifact and running the application with Docker
 
-As a production-ready application, the Pager System can be packaged as a Docker image and run in a containerized environment. This is automated with the CI pipeline, but here is an example of how to build and run the application with Docker:
+As a production-ready application, the Pager can be packaged as a Docker image and run in a containerized environment. This is automated with the CI pipeline, but here is an example of how to build and run the application with Docker:
 
 1. **Build the Docker image**:
     ```sh
