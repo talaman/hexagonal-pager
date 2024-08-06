@@ -55,12 +55,6 @@ The Application Layer orchestrates the use cases and application logic. It inter
 
 The Ports Layer defines the interfaces for the external systems and services that the application interacts with. This layer acts as a boundary, ensuring that the core application logic remains decoupled from the external systems.
 
-- **EmailSender**: Interface for sending emails.
-  - [`EmailSender`](pager/ports/email_sender.py): Defines the contract for sending email notifications.
-- **SmsSender**: Interface for sending SMS.
-- **EscalationPolicyRepository**: Interface for accessing escalation policies.
-  - [`EscalationPolicyRepository`](pager/ports/escalation_policy_repository.py): Defines the contract for accessing escalation policies.
-
 ### Adapters Layer
 
 Ommited for now.
