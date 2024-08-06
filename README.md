@@ -15,9 +15,9 @@ This repository implements a Pager system using Domain-Driven Design (DDD) and H
     - [Ports Layer](#ports-layer)
     - [Adapters Layer](#adapters-layer)
   - [Getting Started](#getting-started)
-    - [Your Environment with DevContainers](#your-environment-with-devcontainers)
+    - [Your Environment with Dev Containers](#your-environment-with-dev-containers)
     - [Your Environment Manually](#your-environment-manually)
-    - [Building and running the Application with Docker](#building-and-running-the-application-with-docker)
+    - [Creating artifact and running the application with Docker](#creating-artifact-and-running-the-application-with-docker)
   - [Continuous Integration](#continuous-integration)
   - [Further Improvements](#further-improvements)
 
@@ -68,9 +68,15 @@ The Adapters Layer implements the interfaces defined in the Ports Layer. It adap
 
 ## Getting Started
 
-### Your Environment with DevContainers
+Clone the repository:
+```sh
+git clone https://github.com/talaman/hexagonal-pager.git
+cd hexagonal-pager
+```
 
-I have included a vscode devcontainer configuration to make it easier to get started with the project. If you have vscode, the DevContainers extension and Docker installed, you can open the project in a container and have all the dependencies set up automatically.
+### Your Environment with Dev Containers
+
+I have included a vscode devcontainer configuration to make it easier to get started with the project. If you have vscode, the Dev Containers extension and Docker installed, you can open the project in a container and have all the dependencies set up automatically.
 
 Just open the project in vscode and click on the "Reopen in Container" button when prompted.
 
@@ -95,24 +101,19 @@ When the dependencies are installed, you can run the tests using the following c
 pytest
 ```
 
-### Building and running the Application with Docker
+### Creating artifact and running the application with Docker
 
-To get started with the Hexagonal Pager System, follow these steps:
+As a production-ready application, the Pager System can be packaged as a Docker image and run in a containerized environment. This is automated with the CI pipeline, but here is an example of how to build and run the application with Docker:
 
-1. **Clone the repository**:
-    ```sh
-    git clone https://github.com/talaman/hexagonal-pager.git
-    cd hexagonal-pager
-    ```
-2. **Build the Docker image**:
+1. **Build the Docker image**:
     ```sh
     docker build -t hexagonal-pager .
     ```
-3. **Test the application**:
+2. **Test the application**:
     ```sh
     docker run --rm hexagonal-pager pytest
     ```
-4. **Run the application**:
+3. **Run the application**:
     This is an example of how to run the application. But a real application would have an adapter layer to interact with external systems.
     ```sh
     docker run -d hexagonal-pager
