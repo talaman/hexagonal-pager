@@ -15,8 +15,11 @@ This repository implements a Pager system using Domain-Driven Design (DDD) and H
     - [Ports Layer](#ports-layer)
     - [Adapters Layer](#adapters-layer)
   - [Getting Started](#getting-started)
-  - [Running Tests](#running-tests)
+    - [Your Environment with DevContainers](#your-environment-with-devcontainers)
+    - [Your Environment Manually](#your-environment-manually)
+    - [Building and running the Application with Docker](#building-and-running-the-application-with-docker)
   - [Continuous Integration](#continuous-integration)
+  - [Further Improvements](#further-improvements)
 
 ## Overview
 
@@ -65,6 +68,35 @@ The Adapters Layer implements the interfaces defined in the Ports Layer. It adap
 
 ## Getting Started
 
+### Your Environment with DevContainers
+
+I have included a vscode devcontainer configuration to make it easier to get started with the project. If you have vscode, the DevContainers extension and Docker installed, you can open the project in a container and have all the dependencies set up automatically.
+
+Just open the project in vscode and click on the "Reopen in Container" button when prompted.
+
+When the container is ready, you can run the tests using the following command in the terminal:
+
+```sh
+pytest
+``` 
+
+### Your Environment Manually
+
+Get your preferred Python environment set up, I have used 3.12 for this project.
+
+Install the dependencies:
+```sh
+pip install -r requirements.txt
+```
+
+When the dependencies are installed, you can run the tests using the following command in the terminal:
+
+```sh
+pytest
+```
+
+### Building and running the Application with Docker
+
 To get started with the Hexagonal Pager System, follow these steps:
 
 1. **Clone the repository**:
@@ -72,26 +104,23 @@ To get started with the Hexagonal Pager System, follow these steps:
     git clone https://github.com/talaman/hexagonal-pager.git
     cd hexagonal-pager
     ```
-
 2. **Build the Docker image**:
     ```sh
     docker build -t hexagonal-pager .
     ```
-
-3. **Run the application**:
+3. **Test the application**:
+    ```sh
+    docker run --rm hexagonal-pager pytest
+    ```
+4. **Run the application**:
+    This is an example of how to run the application. But a real application would have an adapter layer to interact with external systems.
     ```sh
     docker run -d hexagonal-pager
     ```
 
-## Running Tests
-
-To run the tests, use the following command:
-
-```sh
-docker run --rm hexagonal-pager pytest
-```
-
 ## Continuous Integration
+
+[![ci](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml/badge.svg)](https://github.com/talaman/hexagonal-pager/actions/workflows/ci.yml)
 
 This project uses GitHub Actions for continuous integration. The CI pipeline is defined in .github/workflows/ci.yml and includes the following steps:
 
@@ -103,3 +132,10 @@ This project uses GitHub Actions for continuous integration. The CI pipeline is 
 
 The CI pipeline is triggered on every push to the main branch and runs the tests to ensure the code quality and functionality.
 
+## Further Improvements
+
+- Implement the Adapters Layer to integrate with external systems.
+- Add more use cases and scenarios to cover additional functionalities.
+- Ensure the Pager Service handles concurrency issues, such as preventing multiple notifications to the same target when multiple alerts are received simultaneously.
+- Define the expected guarantees from the database regarding consistency and reliability.
+- Implement a robust test strategy to cover all edge cases and concurrency scenarios.
