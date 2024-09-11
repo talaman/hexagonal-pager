@@ -1,6 +1,6 @@
 import pytest
 from pager.domain.models.escalation_policy import EscalationPolicy, EscalationLevel
-from pager.domain.models.notification_target import EmailTarget, SmsTarget
+from pager.domain.models.notification_target import EmailTarget, SmsTarget, SlackTarget
 
 def test_escalation_policy_creation():
     """
@@ -8,8 +8,10 @@ def test_escalation_policy_creation():
     """
     email_target = EmailTarget(email='test@example.com')
     sms_target = SmsTarget(phone_number='1234567890')
+    slack_target = SlackTarget(channel='test')
     level1 = EscalationLevel(level_number=0, targets=[email_target])
     level2 = EscalationLevel(level_number=1, targets=[sms_target])
+    level3 = EscalationLevel(level_number=2, targets=[slack_target])
     policy = EscalationPolicy(monitored_service_id='service1', levels=[level1, level2])
     
     assert policy.monitored_service_id == 'service1'

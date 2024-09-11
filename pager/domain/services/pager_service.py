@@ -2,13 +2,14 @@ from typing import List, Dict
 from pager.domain.models.escalation_policy import EscalationPolicy
 from pager.domain.models.monitored_service import MonitoredService
 from pager.domain.events import Alert, Acknowledgement, HealthyEvent, Timeout
-from pager.domain.models.notification_target import NotificationTarget, EmailTarget, SmsTarget
+from pager.domain.models.notification_target import NotificationTarget, EmailTarget, SmsTarget, SlackTarget
 from pager.ports.email_sender import EmailSender
+from pager.ports.slack_sender import SlackSender
 from pager.ports.sms_sender import SmsSender
 from pager.ports.escalation_policy_repository import EscalationPolicyRepository
 
 class PagerService:
-    def __init__(self, policy_repo: EscalationPolicyRepository, email_sender: EmailSender, sms_sender: SmsSender):
+    def __init__(self, policy_repo: EscalationPolicyRepository, email_sender: EmailSender, sms_sender: SmsSender, slack_sender: SlackSender):
         """
         Initializes a PagerService object.
 
@@ -19,6 +20,7 @@ class PagerService:
         """
         self.policy_repo = policy_repo
         self.email_sender = email_sender
+        self.slack_sender = slack_sender
         self.sms_sender = sms_sender
         self.monitored_services: Dict[str, MonitoredService] = {}
 
@@ -104,6 +106,8 @@ class PagerService:
                 self.email_sender.send(target.get_contact_info())
             elif isinstance(target, SmsTarget):
                 self.sms_sender.send(target.get_contact_info())
+            elif isinstance(target, SlackTarget):
+                self.slack_sender.send(target.get_contact_info())
 
     def get_or_create_monitored_service(self, service_id: str) -> MonitoredService:
         """

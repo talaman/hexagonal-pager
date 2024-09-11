@@ -2,9 +2,10 @@ import pytest
 from pager.domain.models.escalation_policy import EscalationPolicy, EscalationLevel
 from pager.domain.models.monitored_service import MonitoredService
 from pager.domain.events import Alert, Acknowledgement, HealthyEvent
-from pager.domain.models.notification_target import EmailTarget, SmsTarget
+from pager.domain.models.notification_target import EmailTarget, SlackTarget, SmsTarget
 from pager.domain.services.pager_service import PagerService
 from tests.mocks.mock_email_sender import MockEmailSender
+from tests.mocks.mock_slack_sender import MockSlackSender
 from tests.mocks.mock_sms_sender import MockSmsSender
 from tests.mocks.mock_escalation_policy_repository import MockEscalationPolicyRepository
 
@@ -12,17 +13,20 @@ from tests.mocks.mock_escalation_policy_repository import MockEscalationPolicyRe
 def setup_pager_service():
     email_sender = MockEmailSender()
     sms_sender = MockSmsSender()
+    slack_sender = MockSlackSender()
     policy_repo = MockEscalationPolicyRepository({
         'service1': EscalationPolicy(
             monitored_service_id='service1',
             levels=[
                 EscalationLevel(level_number=0, targets=[EmailTarget(email='test@example.com')]),
-                EscalationLevel(level_number=1, targets=[SmsTarget(phone_number='1234567890')])
+                EscalationLevel(level_number=1, targets=[SmsTarget(phone_number='1234567890')]),
+                EscalationLevel(level_number=2, targets=[SlackTarget(channel='test')])
             ]
         )
     })
-    pager_service = PagerService(policy_repo, email_sender, sms_sender)
-    return pager_service, email_sender, sms_sender
+    pager_service = PagerService(policy_repo, email_sender, sms_sender, slack_sender)
+    return pager_service, email_sender, sms_sender, slack_sender
+
 
 # def test_handle_alert(setup_pager_service):
 #     pager_service, email_sender, sms_sender = setup_pager_service
@@ -34,7 +38,7 @@ def setup_pager_service():
 #     assert email_sender.sent_emails[0] == 'test@example.com'
 
 def test_handle_acknowledgement(setup_pager_service):
-    pager_service, email_sender, sms_sender = setup_pager_service
+    pager_service, email_sender, sms_sender, slack_sender = setup_pager_service
     alert = Alert(service_id='service1', message='Test Alert')
     pager_service.handle_alert(alert)
 
@@ -45,7 +49,7 @@ def test_handle_acknowledgement(setup_pager_service):
     assert service.acknowledged
 
 def test_handle_healthy_event(setup_pager_service):
-    pager_service, email_sender, sms_sender = setup_pager_service
+    pager_service, email_sender, sms_sender, slack_sender = setup_pager_service
     alert = Alert(service_id='service1', message='Test Alert')
     pager_service.handle_alert(alert)
 

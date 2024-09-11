@@ -19,3 +19,10 @@ class SmsTarget(NotificationTarget):
 
     def get_contact_info(self) -> str:
         return self.phone_number
+    
+@dataclass
+class SlackTarget(NotificationTarget):
+    channel: str
+
+    def get_contact_info(self) -> str:
+        return self.channel
