@@ -16,8 +16,6 @@ COPY . .
 # Set the PYTHONPATH environment variable
 ENV PYTHONPATH=/app
 
-# Install pytest
-RUN pip install pytest
 
 # Run pytest
 FROM base AS test
@@ -25,4 +23,4 @@ CMD ["pytest"]
 
 # Final stage
 FROM base AS final
-CMD ["python", "pager/application/pager_application_service.py"]
+CMD ["uvicorn", "pager.adapters.fastapi_adapter:app", "--host", "0.0.0.0", "--port", "8000"]
